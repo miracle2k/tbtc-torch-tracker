@@ -9,16 +9,18 @@ from dateutil.parser import parse
 from quart_cors import cors
 
 
-initial = "0x0e98e6c1b32f61ed8396a11730ac2f7d46e9cb8b"
+initial = "0xb6f512124d8ddb8d7ef8559318de92531af32f6f"
 chain = []
 
 async def watch_current():
+    sleep_amount = 3
+
     while True:
         prev = chain[-1] if chain else None
         current = prev['to'] if prev else initial
 
         print('check ' + current)
-        response = await requests.get(f"https://api.zksync.io/api/v0.1/account/{current}/history/0/5")
+        response = await requests.get(f"https://api.zksync.io/api/v0.1/account/{current}/history/0/15")
         data = await response.json()
         
         for tx in data:
@@ -34,9 +36,12 @@ async def watch_current():
                     "date": tx['created_at'],
                     "timestamp": calendar.timegm(parse(tx['created_at']).timetuple()),
                 })
+                sleep_amount = 3
                 break
+        else:
+            sleep_amount = 60
 
-        await asyncio.sleep(30)
+        await asyncio.sleep(sleep_amount)
 
 
 
