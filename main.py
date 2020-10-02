@@ -60,5 +60,5 @@ async def torch():
     return json.dumps(chain)
 
 
-
-app.run()
+if __name__ == '__main__':
+    app.run()

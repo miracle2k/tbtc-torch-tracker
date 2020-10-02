@@ -1,6 +1,6 @@
 FROM python:3.7
 
-RUN pip install "poetry"
+RUN pip install "poetry" hypercorn
 
 # Copy only requirements to cache them in docker layer
 WORKDIR /code
