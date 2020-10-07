@@ -20,7 +20,15 @@ async def watch_current():
         current = prev['to'] if prev else initial
 
         print('check ' + current)
-        response = await requests.get(f"https://api.zksync.io/api/v0.1/account/{current}/history/0/15")
+        try:
+            response = await asyncio.wait_for(
+                requests.get(f"https://api.zksync.io/api/v0.1/account/{current}/history/0/15"), 
+                timeout=15.0)
+        except asyncio.TimeoutError:
+            print('timeout!')
+            await asyncio.sleep()
+            continue
+
         data = await response.json()
         
         for tx in data:

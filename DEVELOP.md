@@ -1,3 +1,8 @@
+Run:
+
+poetry run python main.py
+
+
 Build & Deploy:
 
 docker build -t elsdoerfer/tbtc-torch:latest .
