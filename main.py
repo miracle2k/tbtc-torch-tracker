@@ -58,9 +58,16 @@ from quart import Quart
 app = Quart(__name__)
 app = cors(app, allow_origin="*")
 
+
+
 @app.before_serving
 async def create_db_pool():
-    asyncio.ensure_future(watch_current())
+    future = asyncio.ensure_future(watch_current())
+    def stop(f):
+        # TOOD: Not the right way to stop, show a warning. what is?
+        if f.exception():
+            asyncio.get_running_loop().stop()
+    future.add_done_callback(stop)
 
 
 @app.route('/torch')
