@@ -26,7 +26,7 @@ async def watch_current():
                 timeout=15.0)
         except asyncio.TimeoutError:
             print('timeout!')
-            await asyncio.sleep()
+            await asyncio.sleep(2)
             continue
 
         data = await response.json()
