@@ -31,9 +31,10 @@ async def watch_current():
 
         data = await response.json()
         
-        for tx in data:
+        for tx in data:            
             #print(json.dumps(tx, indent=4))
-            if tx['tx']['type'] == 'Transfer' and tx['tx']['from'] == current and tx['tx']['token'] == 'TBTC':
+            created_at = calendar.timegm(parse(tx['created_at']).timetuple())
+            if tx['tx']['type'] == 'Transfer' and tx['tx']['from'] == current and tx['tx']['token'] == 'TBTC' and (not prev or created_at > prev['timestamp']):
                 print("found tx -> " + tx['tx']["to"])
                 chain.append({
                     "from": tx['tx']["from"],
@@ -42,7 +43,7 @@ async def watch_current():
                     "fee": tx['tx']["fee"],
                     "tx_id": tx['tx_id'],
                     "date": tx['created_at'],
-                    "timestamp": calendar.timegm(parse(tx['created_at']).timetuple()),
+                    "timestamp": created_at,
                 })
                 sleep_amount = 3
                 break
